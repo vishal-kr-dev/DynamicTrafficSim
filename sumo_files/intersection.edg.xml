@@ -1,0 +1,11 @@
+<edges>
+    <edge id="edge_north_in" from="N1" to="J0" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_south_in" from="S1" to="J0" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_east_in"  from="E1" to="J0" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_west_in"  from="W1" to="J0" priority="78" numLanes="2" speed="13.89" />
+
+    <edge id="edge_north_out" from="J0" to="N1" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_south_out" from="J0" to="S1" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_east_out"  from="J0" to="E1" priority="78" numLanes="2" speed="13.89" />
+    <edge id="edge_west_out"  from="J0" to="W1" priority="78" numLanes="2" speed="13.89" />
+</edges>
