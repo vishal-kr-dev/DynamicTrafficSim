@@ -1,22 +1,4 @@
-<!-- <additional>
-    <tlLogic id="J0" type="static" programID="my_program" offset="0">
-        <phase duration="30" state="GGgggrrrrrrrrrrrrrrr"/>
-        <phase duration="4"  state="yyyyyrrrrrrrrrrrrrrr"/>
-        <phase duration="30" state="rrrrrGGgggrrrrrrrrrr"/>
-        <phase duration="4"  state="rrrrryyyyyrrrrrrrrrr"/>
-        <phase duration="30" state="rrrrrrrrrrGGgggrrrrr"/>
-        <phase duration="4"  state="rrrrrrrrrryyyyyrrrrr"/>
-        <phase duration="30" state="rrrrrrrrrrrrrrrGGggg"/>
-        <phase duration="4"  state="rrrrrrrrrrrrrrryyyyy"/>
-    </tlLogic>
-</additional> -->
-
-
 <additional>
-    <!-- <tlLogic id="J0" type="static" programID="my_program" offset="0">
-        <phase duration="4"  state="rrrrrrrrrrrrrrryyyyy"/>
-    </tlLogic> -->
-
     <inductionLoop id="loop_N_0" lane="edge_north_in_0" pos="50" freq="900" file="out.xml"/>
     <inductionLoop id="loop_N_1" lane="edge_north_in_1" pos="50" freq="900" file="out.xml"/>
     <inductionLoop id="loop_S_0" lane="edge_south_in_0" pos="50" freq="900" file="out.xml"/>
@@ -25,5 +7,4 @@
     <inductionLoop id="loop_E_1" lane="edge_east_in_1" pos="50" freq="900" file="out.xml"/>
     <inductionLoop id="loop_W_0" lane="edge_west_in_0" pos="50" freq="900" file="out.xml"/>
     <inductionLoop id="loop_W_1" lane="edge_west_in_1" pos="50" freq="900" file="out.xml"/>
-
 </additional>
