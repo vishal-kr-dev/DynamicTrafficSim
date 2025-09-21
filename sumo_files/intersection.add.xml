@@ -1,10 +1,10 @@
 <additional>
-    <inductionLoop id="loop_N_0" lane="edge_north_in_0" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_N_1" lane="edge_north_in_1" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_S_0" lane="edge_south_in_0" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_S_1" lane="edge_south_in_1" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_E_0" lane="edge_east_in_0" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_E_1" lane="edge_east_in_1" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_W_0" lane="edge_west_in_0" pos="50" freq="900" file="out.xml"/>
-    <inductionLoop id="loop_W_1" lane="edge_west_in_1" pos="50" freq="900" file="out.xml"/>
+    <laneAreaDetector id="det_N_0" lane="edge_north_in_0" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_N_1" lane="edge_north_in_1" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_S_0" lane="edge_south_in_0" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_S_1" lane="edge_south_in_1" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_E_0" lane="edge_east_in_0" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_E_1" lane="edge_east_in_1" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_W_0" lane="edge_west_in_0" freq="100" file="out.xml" pos="-50" length="48"/>
+    <laneAreaDetector id="det_W_1" lane="edge_west_in_1" freq="100" file="out.xml" pos="-50" length="48"/>
 </additional>
