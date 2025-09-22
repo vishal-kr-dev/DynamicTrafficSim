@@ -1,18 +1,12 @@
-# scripts/runner.py
 import os
 import sys
 import traci
 import config
 import visualizer
 
-# This global variable will be populated by our smart function
 PHASES = {}
 
 def build_phase_definitions():
-    """
-    Asks SUMO for the traffic light's signal order and builds the PHASES
-    dictionary dynamically. This makes the script adaptable to any network.
-    """
     global PHASES
     controlled_lanes = traci.trafficlight.getControlledLanes("J0")
     num_signals = len(controlled_lanes)
@@ -44,9 +38,6 @@ def build_phase_definitions():
             PHASES["West Green"], PHASES["West Yellow"] = green_state, yellow_state
 
 def get_total_wait_times():
-    """
-    Calculates the total accumulated waiting time for all cars in the detector zones.
-    """
     wait_times = { "North": 0.0, "South": 0.0, "East": 0.0, "West": 0.0 }
     
     detector_map = {
