@@ -1,7 +1,7 @@
 import os
 import sys
 import traci
-import config
+import rl_agent.config as config
 import visualizer
 
 PHASES = {}

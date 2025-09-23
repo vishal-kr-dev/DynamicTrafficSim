@@ -1,6 +1,6 @@
 # scripts/visualizer.py
 import traci
-import config
+import rl_agent.config as config
 
 # Define which lanes represent each approach
 APPROACH_LANES = {
@@ -41,7 +41,7 @@ def setup_display():
 
 # scripts/visualizer.py# scripts/visualizer.py
 import traci
-import config
+import rl_agent.config as config
 
 # Define which lanes represent each approach
 APPROACH_LANES = {
