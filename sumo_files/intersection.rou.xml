@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-09-24 01:06:25.769717 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<!-- generated on 2025-09-24 03:30:28.960273 by randomTrips.py v1_24_0+0000-b72eb3fabc8
 <configuration>
     <net-file value="sumo_files/intersection.net.xml"/>
     <route-file value="sumo_files/intersection.rou.xml"/>
-    <end value="600.0"/>
+    <end value="50.0"/>
     <period value="8.0"/>
 </configuration>
 -->
 
-<!-- generated on 2025-09-24 01:06:25 by Eclipse SUMO duarouter Version 1.24.0
+<!-- generated on 2025-09-24 03:30:28 by Eclipse SUMO duarouter Version 1.24.0
 <duarouterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
 
     <input>
@@ -24,7 +24,7 @@
 
     <time>
         <begin value="0"/>
-        <end value="600.0"/>
+        <end value="50.0"/>
     </time>
 
     <report>
@@ -57,209 +57,5 @@
     </vehicle>
     <vehicle id="6" depart="48.00">
         <route edges="edge_east_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="7" depart="56.00">
-        <route edges="edge_south_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="8" depart="64.00">
-        <route edges="edge_east_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="9" depart="72.00">
-        <route edges="edge_west_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="10" depart="80.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="11" depart="88.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="12" depart="96.00">
-        <route edges="edge_west_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="13" depart="104.00">
-        <route edges="edge_east_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="14" depart="112.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="15" depart="120.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="16" depart="128.00">
-        <route edges="edge_south_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="17" depart="136.00">
-        <route edges="edge_north_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="18" depart="144.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="19" depart="152.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="20" depart="160.00">
-        <route edges="edge_south_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="21" depart="168.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="22" depart="176.00">
-        <route edges="edge_east_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="23" depart="184.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="24" depart="192.00">
-        <route edges="edge_south_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="25" depart="200.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="26" depart="208.00">
-        <route edges="edge_north_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="27" depart="216.00">
-        <route edges="edge_south_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="28" depart="224.00">
-        <route edges="edge_east_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="29" depart="232.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="30" depart="240.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="31" depart="248.00">
-        <route edges="edge_south_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="32" depart="256.00">
-        <route edges="edge_west_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="33" depart="264.00">
-        <route edges="edge_east_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="34" depart="272.00">
-        <route edges="edge_north_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="35" depart="280.00">
-        <route edges="edge_east_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="36" depart="288.00">
-        <route edges="edge_west_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="37" depart="296.00">
-        <route edges="edge_south_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="38" depart="304.00">
-        <route edges="edge_west_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="39" depart="312.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="40" depart="320.00">
-        <route edges="edge_south_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="41" depart="328.00">
-        <route edges="edge_south_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="42" depart="336.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="43" depart="344.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="44" depart="352.00">
-        <route edges="edge_east_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="45" depart="360.00">
-        <route edges="edge_east_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="46" depart="368.00">
-        <route edges="edge_west_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="47" depart="376.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="48" depart="384.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="49" depart="392.00">
-        <route edges="edge_west_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="50" depart="400.00">
-        <route edges="edge_east_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="51" depart="408.00">
-        <route edges="edge_south_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="52" depart="416.00">
-        <route edges="edge_north_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="53" depart="424.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="54" depart="432.00">
-        <route edges="edge_north_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="55" depart="440.00">
-        <route edges="edge_west_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="56" depart="448.00">
-        <route edges="edge_south_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="57" depart="456.00">
-        <route edges="edge_west_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="58" depart="464.00">
-        <route edges="edge_north_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="59" depart="472.00">
-        <route edges="edge_south_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="60" depart="480.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="61" depart="488.00">
-        <route edges="edge_west_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="62" depart="496.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="63" depart="504.00">
-        <route edges="edge_east_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="64" depart="512.00">
-        <route edges="edge_west_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="65" depart="520.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="66" depart="528.00">
-        <route edges="edge_west_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="67" depart="536.00">
-        <route edges="edge_east_in edge_north_out"/>
-    </vehicle>
-    <vehicle id="68" depart="544.00">
-        <route edges="edge_east_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="69" depart="552.00">
-        <route edges="edge_west_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="70" depart="560.00">
-        <route edges="edge_north_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="71" depart="568.00">
-        <route edges="edge_north_in edge_west_out"/>
-    </vehicle>
-    <vehicle id="72" depart="576.00">
-        <route edges="edge_north_in edge_east_out"/>
-    </vehicle>
-    <vehicle id="73" depart="584.00">
-        <route edges="edge_south_in edge_south_out"/>
-    </vehicle>
-    <vehicle id="74" depart="592.00">
-        <route edges="edge_east_in edge_north_out"/>
     </vehicle>
 </routes>

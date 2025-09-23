@@ -3,3 +3,4 @@ Progress.md
 __pycache__/
 sumo_files/out.xml
 venv
+temp_worker_*

@@ -1,28 +1,38 @@
+# rl_agent/agent.py
 import numpy as np
 import random
 from collections import deque
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.optimizers import Adam
 
 class Agent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=2000) # Memory buffer for experiences
-        self.gamma = 0.95    # Discount rate for future rewards
-        self.epsilon = 1.0  # Exploration rate (starts at 100%)
+        self.memory = deque(maxlen=2000)
+        self.gamma = 0.95
+        self.epsilon = 1.0
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
         self.learning_rate = 0.001
         self.model = self._build_model()
 
+        # "Warm up" the model to prevent hangs on first prediction
+        print("Warming up agent's brain...")
+        dummy_state = np.zeros((1, self.state_size))
+        self.model.predict(dummy_state, verbose=0)
+        print("Agent's brain is warmed up and ready.")
+
     def _build_model(self):
-        # Neural Net for Deep Q-learning Model
-        model = Sequential()
-        model.add(Dense(24, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(24, activation='relu'))
-        model.add(Dense(self.action_size, activation='linear'))
+        # --- THIS IS THE UPDATED PART ---
+        # Using the modern Keras API with an Input layer to remove the warning
+        model = Sequential([
+            Input(shape=(self.state_size,)),
+            Dense(24, activation='relu'),
+            Dense(24, activation='relu'),
+            Dense(self.action_size, activation='linear')
+        ])
         model.compile(loss='mse', optimizer=Adam(learning_rate=self.learning_rate))
         return model
 
@@ -30,13 +40,14 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done))
 
     def act(self, state):
-        # Epsilon-greedy action selection
         if np.random.rand() <= self.epsilon:
-            return random.randrange(self.action_size) # Explore
+            return random.randrange(self.action_size)
         act_values = self.model.predict(state, verbose=0)
-        return np.argmax(act_values[0])  # Exploit
+        return np.argmax(act_values[0])
 
     def replay(self, batch_size):
+        if len(self.memory) < batch_size:
+            return
         minibatch = random.sample(self.memory, batch_size)
         for state, action, reward, next_state, done in minibatch:
             target = reward
