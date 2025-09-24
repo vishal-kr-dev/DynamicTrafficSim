@@ -2,10 +2,9 @@
 import numpy as np
 import random
 from collections import deque
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, Lambda
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras import backend as K
 
 class Agent:
     def __init__(self, state_size, action_size):
@@ -19,33 +18,18 @@ class Agent:
         self.learning_rate = 0.001
         self.model = self._build_model()
 
-        # "Warm up" the model to prevent hangs on first prediction
         print("Warming up agent's brain...")
         dummy_state = np.zeros((1, self.state_size))
         self.model.predict(dummy_state, verbose=0)
         print("Agent's brain is warmed up and ready.")
 
     def _build_model(self):
-        """Builds a Dueling DQN model."""
-        input_layer = Input(shape=(self.state_size,))
-        
-        # Shared layers
-        shared = Dense(24, activation='relu')(input_layer)
-        shared = Dense(24, activation='relu')(shared)
-        
-        # Value stream
-        value_stream = Dense(16, activation='relu')(shared)
-        value = Dense(1, activation='linear')(value_stream)
-        
-        # Advantage stream
-        advantage_stream = Dense(16, activation='relu')(shared)
-        advantage = Dense(self.action_size, activation='linear')(advantage_stream)
-        
-        # Combine value and advantage streams to get Q-values
-        q_values = Lambda(lambda x: x[0] + (x[1] - K.mean(x[1], axis=1, keepdims=True)),
-                          output_shape=(self.action_size,))([value, advantage])
-        
-        model = Model(inputs=input_layer, outputs=q_values)
+        """Builds a simple MLP model with 12 neurons for faster training."""
+        model = Sequential([
+            Input(shape=(self.state_size,)),
+            Dense(12, activation='relu'), # Simplified to 12 neurons
+            Dense(self.action_size, activation='linear')
+        ])
         model.compile(loss='mse', optimizer=Adam(learning_rate=self.learning_rate))
         return model
 
@@ -53,13 +37,11 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done))
 
     def act(self, state, valid_actions=[0, 1]):
-        """Chooses an action using epsilon-greedy policy with action masking."""
         if np.random.rand() <= self.epsilon:
             return random.choice(valid_actions)
         
         act_values = self.model.predict(state, verbose=0)[0]
         
-        # Create a mask to only consider valid actions
         masked_act_values = np.full(self.action_size, -np.inf)
         masked_act_values[valid_actions] = act_values[valid_actions]
         

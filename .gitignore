@@ -5,3 +5,4 @@ sumo_files/out.xml
 venv
 temp_worker_*
 temp/
+routes/
