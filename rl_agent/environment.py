@@ -23,13 +23,13 @@ class SumoEnvironment:
         self.phase_map_names = []
         self.current_phase_index = 0
         self.phase_timer = 0
-        self.cumulative_queues = 0 # Accumulates queue length over a cycle for the reward
+        self.cumulative_queues = 0
 
     def _start_simulation(self):
         subprocess.run([sys.executable, os.path.join(os.environ['SUMO_HOME'], 'tools', 'randomTrips.py'),
                          '-n', 'sumo_files/intersection.net.xml',
                          '-r', 'sumo_files/intersection.rou.xml',
-                         '-e', '50', '-p', '8.0', '--validate'],
+                         '-e', '600', '-p', '8.0', '--validate'],
                         capture_output=True, text=True)
         
         sumo_cmd = [self.sumo_binary, "-c", "sumo_files/intersection.sumocfg", "--no-warnings", "true"]
@@ -54,11 +54,9 @@ class SumoEnvironment:
             green_state, yellow_state = "", ""
             for i in range(num_signals):
                 if signal_to_direction.get(i) == dir_char:
-                    green_state += "G"
-                    yellow_state += "y"
+                    green_state += "G"; yellow_state += "y"
                 else:
-                    green_state += "r"
-                    yellow_state += "r"
+                    green_state += "r"; yellow_state += "r"
             self.phases[f"{dir_name} Green"] = green_state
             self.phases[f"{dir_name} Yellow"] = yellow_state
 
@@ -66,9 +64,7 @@ class SumoEnvironment:
         if traci.isLoaded():
             traci.close()
         self._start_simulation()
-        self.current_phase_index = 0
-        self.phase_timer = 0
-        self.cumulative_queues = 0
+        self.current_phase_index = 0; self.phase_timer = 0; self.cumulative_queues = 0
         traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.phase_map_names[self.current_phase_index]])
         initial_queues = self._get_queues()
         return self._get_state(initial_queues)
@@ -76,45 +72,57 @@ class SumoEnvironment:
     def step(self, action):
         current_phase_name = self.phase_map_names[self.current_phase_index]
         reward = 0
-
-        # Logic for green phases
         if "Green" in current_phase_name and self.phase_timer > config.MIN_GREEN_TIME:
             if action == 1 or self.phase_timer > config.MAX_GREEN_TIME:
                 self.current_phase_index += 1
                 traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.phase_map_names[self.current_phase_index]])
                 self.phase_timer = 0
-        
-        # Logic for yellow phases
         elif "Yellow" in current_phase_name and self.phase_timer > config.YELLOW_TIME:
             self.current_phase_index = (self.current_phase_index + 1) % len(self.phase_map_names)
             traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.phase_map_names[self.current_phase_index]])
             self.phase_timer = 0
-            
             if self.current_phase_index == 0:
-                reward = -self.cumulative_queues # Reward is the negative total cars that were stopped during the cycle
-                self.cumulative_queues = 0 # Reset the counter for the new cycle
+                reward = -self.cumulative_queues
+                self.cumulative_queues = 0
         
         traci.simulationStep()
         self.phase_timer += 1
         
-        # --- FASTER CALCULATION ---
         current_queues = self._get_queues()
-        self.cumulative_queues += sum(current_queues)
+        self.cumulative_queues += sum(current_queues.values())
         
         state = self._get_state(current_queues)
         done = traci.simulation.getMinExpectedNumber() == 0
         return state, reward, done
 
     def _get_queues(self):
-        return [
-            traci.lanearea.getLastStepHaltingNumber("det_N_0") + traci.lanearea.getLastStepHaltingNumber("det_N_1"),
-            traci.lanearea.getLastStepHaltingNumber("det_E_0") + traci.lanearea.getLastStepHaltingNumber("det_E_1"),
-            traci.lanearea.getLastStepHaltingNumber("det_S_0") + traci.lanearea.getLastStepHaltingNumber("det_S_1"),
-            traci.lanearea.getLastStepHaltingNumber("det_W_0") + traci.lanearea.getLastStepHaltingNumber("det_W_1")
-        ]
+        """Returns a dictionary of raw queue counts for each approach."""
+        return {
+            "North": traci.lanearea.getLastStepHaltingNumber("det_N_0") + traci.lanearea.getLastStepHaltingNumber("det_N_1"),
+            "East": traci.lanearea.getLastStepHaltingNumber("det_E_0") + traci.lanearea.getLastStepHaltingNumber("det_E_1"),
+            "South": traci.lanearea.getLastStepHaltingNumber("det_S_0") + traci.lanearea.getLastStepHaltingNumber("det_S_1"),
+            "West": traci.lanearea.getLastStepHaltingNumber("det_W_0") + traci.lanearea.getLastStepHaltingNumber("det_W_1")
+        }
 
     def _get_state(self, queues):
-        return np.array(queues + [self.current_phase_index]).reshape(1, self.state_size)
+        """Builds a normalized state array."""
+        # Calculate max capacity for each approach
+        capacities = {
+            "North": config.LANE_COUNTS["North"] * config.MAX_QUEUE_PER_LANE,
+            "East": config.LANE_COUNTS["East"] * config.MAX_QUEUE_PER_LANE,
+            "South": config.LANE_COUNTS["South"] * config.MAX_QUEUE_PER_LANE,
+            "West": config.LANE_COUNTS["West"] * config.MAX_QUEUE_PER_LANE
+        }
+        
+        # Normalize each queue count to a value between 0.0 and 1.0
+        normalized_queues = [
+            queues["North"] / capacities["North"],
+            queues["East"] / capacities["East"],
+            queues["South"] / capacities["South"],
+            queues["West"] / capacities["West"]
+        ]
+        
+        return np.array(normalized_queues + [self.current_phase_index]).reshape(1, self.state_size)
 
     def close(self):
         if traci.isLoaded():

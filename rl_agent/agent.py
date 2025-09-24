@@ -2,9 +2,10 @@
 import numpy as np
 import random
 from collections import deque
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input, Lambda
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import backend as K
 
 class Agent:
     def __init__(self, state_size, action_size):
@@ -25,25 +26,44 @@ class Agent:
         print("Agent's brain is warmed up and ready.")
 
     def _build_model(self):
-        # --- THIS IS THE UPDATED PART ---
-        # Using the modern Keras API with an Input layer to remove the warning
-        model = Sequential([
-            Input(shape=(self.state_size,)),
-            Dense(24, activation='relu'),
-            Dense(24, activation='relu'),
-            Dense(self.action_size, activation='linear')
-        ])
+        """Builds a Dueling DQN model."""
+        input_layer = Input(shape=(self.state_size,))
+        
+        # Shared layers
+        shared = Dense(24, activation='relu')(input_layer)
+        shared = Dense(24, activation='relu')(shared)
+        
+        # Value stream
+        value_stream = Dense(16, activation='relu')(shared)
+        value = Dense(1, activation='linear')(value_stream)
+        
+        # Advantage stream
+        advantage_stream = Dense(16, activation='relu')(shared)
+        advantage = Dense(self.action_size, activation='linear')(advantage_stream)
+        
+        # Combine value and advantage streams to get Q-values
+        q_values = Lambda(lambda x: x[0] + (x[1] - K.mean(x[1], axis=1, keepdims=True)),
+                          output_shape=(self.action_size,))([value, advantage])
+        
+        model = Model(inputs=input_layer, outputs=q_values)
         model.compile(loss='mse', optimizer=Adam(learning_rate=self.learning_rate))
         return model
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
 
-    def act(self, state):
+    def act(self, state, valid_actions=[0, 1]):
+        """Chooses an action using epsilon-greedy policy with action masking."""
         if np.random.rand() <= self.epsilon:
-            return random.randrange(self.action_size)
-        act_values = self.model.predict(state, verbose=0)
-        return np.argmax(act_values[0])
+            return random.choice(valid_actions)
+        
+        act_values = self.model.predict(state, verbose=0)[0]
+        
+        # Create a mask to only consider valid actions
+        masked_act_values = np.full(self.action_size, -np.inf)
+        masked_act_values[valid_actions] = act_values[valid_actions]
+        
+        return np.argmax(masked_act_values)
 
     def replay(self, batch_size):
         if len(self.memory) < batch_size:
@@ -52,8 +72,8 @@ class Agent:
         for state, action, reward, next_state, done in minibatch:
             target = reward
             if not done:
-                target = (reward + self.gamma *
-                          np.amax(self.model.predict(next_state, verbose=0)[0]))
+                q_next = self.model.predict(next_state, verbose=0)[0]
+                target = (reward + self.gamma * np.amax(q_next))
             target_f = self.model.predict(state, verbose=0)
             target_f[0][action] = target
             self.model.fit(state, target_f, epochs=1, verbose=0)

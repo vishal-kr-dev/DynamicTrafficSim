@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-09-24 03:30:28.783085 by randomTrips.py v1_24_0+0000-b72eb3fabc8
+<!-- generated on 2025-09-24 17:13:52.467608 by randomTrips.py v1_24_0+0000-b72eb3fabc8
 <configuration>
     <net-file value="sumo_files/intersection.net.xml"/>
     <route-file value="sumo_files/intersection.rou.xml"/>
-    <end value="50.0"/>
+    <end value="600.0"/>
     <period value="8.0"/>
 </configuration>
 -->
@@ -17,4 +17,72 @@
     <trip id="4" depart="32.00" from="edge_north_in" to="edge_east_out"/>
     <trip id="5" depart="40.00" from="edge_east_in" to="edge_south_out"/>
     <trip id="6" depart="48.00" from="edge_east_in" to="edge_east_out"/>
+    <trip id="7" depart="56.00" from="edge_south_in" to="edge_south_out"/>
+    <trip id="8" depart="64.00" from="edge_east_in" to="edge_south_out"/>
+    <trip id="9" depart="72.00" from="edge_west_in" to="edge_east_out"/>
+    <trip id="10" depart="80.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="11" depart="88.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="12" depart="96.00" from="edge_west_in" to="edge_north_out"/>
+    <trip id="13" depart="104.00" from="edge_east_in" to="edge_east_out"/>
+    <trip id="14" depart="112.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="15" depart="120.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="16" depart="128.00" from="edge_south_in" to="edge_west_out"/>
+    <trip id="17" depart="136.00" from="edge_north_in" to="edge_south_out"/>
+    <trip id="18" depart="144.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="19" depart="152.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="20" depart="160.00" from="edge_south_in" to="edge_east_out"/>
+    <trip id="21" depart="168.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="22" depart="176.00" from="edge_east_in" to="edge_east_out"/>
+    <trip id="23" depart="184.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="24" depart="192.00" from="edge_south_in" to="edge_north_out"/>
+    <trip id="25" depart="200.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="26" depart="208.00" from="edge_north_in" to="edge_west_out"/>
+    <trip id="27" depart="216.00" from="edge_south_in" to="edge_south_out"/>
+    <trip id="28" depart="224.00" from="edge_east_in" to="edge_south_out"/>
+    <trip id="29" depart="232.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="30" depart="240.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="31" depart="248.00" from="edge_south_in" to="edge_south_out"/>
+    <trip id="32" depart="256.00" from="edge_west_in" to="edge_west_out"/>
+    <trip id="33" depart="264.00" from="edge_east_in" to="edge_east_out"/>
+    <trip id="34" depart="272.00" from="edge_north_in" to="edge_north_out"/>
+    <trip id="35" depart="280.00" from="edge_east_in" to="edge_west_out"/>
+    <trip id="36" depart="288.00" from="edge_west_in" to="edge_north_out"/>
+    <trip id="37" depart="296.00" from="edge_south_in" to="edge_north_out"/>
+    <trip id="38" depart="304.00" from="edge_west_in" to="edge_north_out"/>
+    <trip id="39" depart="312.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="40" depart="320.00" from="edge_south_in" to="edge_north_out"/>
+    <trip id="41" depart="328.00" from="edge_south_in" to="edge_west_out"/>
+    <trip id="42" depart="336.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="43" depart="344.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="44" depart="352.00" from="edge_east_in" to="edge_east_out"/>
+    <trip id="45" depart="360.00" from="edge_east_in" to="edge_south_out"/>
+    <trip id="46" depart="368.00" from="edge_west_in" to="edge_north_out"/>
+    <trip id="47" depart="376.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="48" depart="384.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="49" depart="392.00" from="edge_west_in" to="edge_west_out"/>
+    <trip id="50" depart="400.00" from="edge_east_in" to="edge_south_out"/>
+    <trip id="51" depart="408.00" from="edge_south_in" to="edge_south_out"/>
+    <trip id="52" depart="416.00" from="edge_north_in" to="edge_south_out"/>
+    <trip id="53" depart="424.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="54" depart="432.00" from="edge_north_in" to="edge_west_out"/>
+    <trip id="55" depart="440.00" from="edge_west_in" to="edge_north_out"/>
+    <trip id="56" depart="448.00" from="edge_south_in" to="edge_east_out"/>
+    <trip id="57" depart="456.00" from="edge_west_in" to="edge_west_out"/>
+    <trip id="58" depart="464.00" from="edge_north_in" to="edge_south_out"/>
+    <trip id="59" depart="472.00" from="edge_south_in" to="edge_east_out"/>
+    <trip id="60" depart="480.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="61" depart="488.00" from="edge_west_in" to="edge_south_out"/>
+    <trip id="62" depart="496.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="63" depart="504.00" from="edge_east_in" to="edge_west_out"/>
+    <trip id="64" depart="512.00" from="edge_west_in" to="edge_west_out"/>
+    <trip id="65" depart="520.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="66" depart="528.00" from="edge_west_in" to="edge_west_out"/>
+    <trip id="67" depart="536.00" from="edge_east_in" to="edge_north_out"/>
+    <trip id="68" depart="544.00" from="edge_east_in" to="edge_west_out"/>
+    <trip id="69" depart="552.00" from="edge_west_in" to="edge_east_out"/>
+    <trip id="70" depart="560.00" from="edge_north_in" to="edge_south_out"/>
+    <trip id="71" depart="568.00" from="edge_north_in" to="edge_west_out"/>
+    <trip id="72" depart="576.00" from="edge_north_in" to="edge_east_out"/>
+    <trip id="73" depart="584.00" from="edge_south_in" to="edge_south_out"/>
+    <trip id="74" depart="592.00" from="edge_east_in" to="edge_north_out"/>
 </routes>
