@@ -16,7 +16,6 @@ def discretize_queue(queue_length):
 class SumoEnvironment:
     def __init__(self, use_gui=False, delay=0, worker_id=0):
         self.use_gui = use_gui; self.delay = delay; self.worker_id = worker_id
-
         self.main_temp_dir = "temp"
         self.temp_dir = os.path.join(self.main_temp_dir, f"worker_{self.worker_id}")
         
@@ -28,10 +27,9 @@ class SumoEnvironment:
         self.current_phase_index = 0; self.phase_timer = 0; self.previous_queues = [0] * 8
 
     def _start_simulation(self):
-        if not os.path.exists(self.main_temp_dir):
-            os.makedirs(self.main_temp_dir)
+        # Added exist_ok=True for robustness
+        os.makedirs(self.main_temp_dir, exist_ok=True)
             
-        # Create a temporary workspace for this worker
         if os.path.exists(self.temp_dir): shutil.rmtree(self.temp_dir)
         os.makedirs(self.temp_dir)
     
@@ -66,18 +64,33 @@ class SumoEnvironment:
         if traci.isLoaded(): traci.close()
         self._start_simulation(); self.current_phase_index = 0; self.phase_timer = 0
         traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.phase_map_names[self.current_phase_index]])
-        self.previous_queues = self._get_raw_queues(); return self._get_state()
+        self.previous_queues = self._get_raw_queues()
+        # Pass the initial queues to get the first state correctly
+        return self._get_state(self.previous_queues)
 
     def step(self, action):
         current_phase_name = self.phase_map_names[self.current_phase_index]
+        
+        # Determine next phase based on action
         if "Green" in current_phase_name and self.phase_timer > config.MIN_GREEN_TIME:
-            if action == 1 or self.phase_timer > config.MAX_GREEN_TIME: self.current_phase_index += 1; self.phase_timer = 0
+            if action == 1 or self.phase_timer > config.MAX_GREEN_TIME:
+                self.current_phase_index += 1; self.phase_timer = 0
         elif "Yellow" in current_phase_name and self.phase_timer > config.YELLOW_TIME:
             self.current_phase_index = (self.current_phase_index + 1) % len(self.phase_map_names); self.phase_timer = 0
+        
+        # Set the light state for the new phase
         traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.phase_map_names[self.current_phase_index]])
+        
+        # Advance the simulation
         traci.simulationStep(); self.phase_timer += 1
-        current_queues = self._get_raw_queues(); reward = self._get_shaped_reward(current_queues, action)
-        state = self._get_state(); done = traci.simulation.getMinExpectedNumber() == 0
+        
+        # Get data once per step for efficiency
+        current_queues = self._get_raw_queues()
+        reward = self._get_shaped_reward(current_queues, action)
+        state = self._get_state(current_queues)
+        done = traci.simulation.getMinExpectedNumber() == 0
+        
+        # Store current queues for the next step's reward calculation
         self.previous_queues = current_queues
         return state, reward, done
     
@@ -88,10 +101,13 @@ class SumoEnvironment:
         return [0, 1]
 
     def _get_raw_queues(self):
-        return [traci.lanearea.getLastStepHaltingNumber(f"det_{d}_{i}") for d in "NESW" for i in range(2)]
+        return [traci.lanearea.getLastStepHaltingNumber(f"det_N_{i}") for i in range(2)] + \
+               [traci.lanearea.getLastStepHaltingNumber(f"det_E_{i}") for i in range(2)] + \
+               [traci.lanearea.getLastStepHaltingNumber(f"det_S_{i}") for i in range(2)] + \
+               [traci.lanearea.getLastStepHaltingNumber(f"det_W_{i}") for i in range(2)]
 
-    def _get_state(self):
-        raw_queues = self._get_raw_queues()
+    def _get_state(self, raw_queues):
+        # Now accepts raw_queues as an argument to avoid re-calculating
         north_q = raw_queues[0] + raw_queues[1]; east_q = raw_queues[2] + raw_queues[3]
         south_q = raw_queues[4] + raw_queues[5]; west_q = raw_queues[6] + raw_queues[7]
         discretized_queues = [discretize_queue(q) for q in [north_q, east_q, south_q, west_q]]
