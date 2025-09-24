@@ -12,3 +12,17 @@ sumo-gui -c sumo_files/intersection.sumocfg
 ```
 python "%SUMO_HOME%/tools/randomTrips.py" -n sumo_files/intersection.net.xml -r sumo_files/intersection.rou.xml -e 3600 -p 3.0 --validate
 ```
+
+
+# Cloud setup
+```
+# Install system dependencies (SUMO)
+!apt-get update && apt-get install sumo sumo-tools sumo-doc -y
+
+# Install Python packages
+!pip install -r requirements.txt
+
+# Set the SUMO_HOME environment variable
+import os
+os.environ['SUMO_HOME'] = '/usr/share/sumo'
+```
