@@ -1,0 +1,13 @@
+<additional>
+    <e2Detector id="det_N" lane="N_in_0" pos="-52" length="50" freq="1" file="detector_output.xml"/>
+    <e2Detector id="det_E" lane="E_in_0" pos="-52" length="50" freq="1" file="detector_output.xml"/>
+    <e2Detector id="det_S" lane="S_in_0" pos="-52" length="50" freq="1" file="detector_output.xml"/>
+    <e2Detector id="det_W" lane="W_in_0" pos="-52" length="50" freq="1" file="detector_output.xml"/>
+</additional>
+
+<!-- <additional>
+    <inductionLoop id="det_N" lane="N_in_0" pos="-30" freq="1" file="detector_output.xml"/>
+    <inductionLoop id="det_E" lane="E_in_0" pos="-30" freq="1" file="detector_output.xml"/>
+    <inductionLoop id="det_S" lane="S_in_0" pos="-30" freq="1" file="detector_output.xml"/>
+    <inductionLoop id="det_W" lane="W_in_0" pos="-30" freq="1" file="detector_output.xml"/>
+</additional> -->

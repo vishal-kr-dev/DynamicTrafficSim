@@ -1,0 +1,6 @@
+stable-baselines3[extra]
+gymnasium
+pyyaml
+pandas
+shapely
+traci # Note: Usually comes with SUMO, but can be installed via pip if needed

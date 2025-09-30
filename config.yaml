@@ -1,0 +1,40 @@
+# SUMO Configuration
+sumo:
+  net_file: "sumo_files/intersection.net.xml"
+  config_file: "sumo_files/sumo_config.sumocfg"
+  route_folder: "routes"
+  simulation_end: 1800  # seconds
+  min_green_time: 10
+  max_green_time: 40
+  yellow_time: 4
+
+# Route Generation
+routes:
+  num_train_routes: 10
+  num_test_routes: 5
+  ambulance_ratio: 0.3 # 30% of routes will have an ambulance
+  period: 3 # Average time between vehicle departures
+  
+# DQN Agent Hyperparameters
+dqn:
+  policy: "MlpPolicy"
+  learning_rate: 0.001
+  buffer_size: 50000
+  learning_starts: 200
+  batch_size: 32
+  gamma: 0.95
+  train_freq: [4, "step"]
+  target_update_interval: 1000
+  exploration_fraction: 0.1
+  exploration_final_eps: 0.02
+  verbose: 1
+  total_timesteps: 20000 # Total timesteps for training
+
+# Emergency Vehicle Preemption
+preemption:
+  detection_distance: 100 # meters from intersection
+  
+# Logging and Models
+paths:
+  model_save_path: "models/dqn_traffic_model.zip"
+  log_folder: "data"
