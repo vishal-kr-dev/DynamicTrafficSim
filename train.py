@@ -5,7 +5,7 @@ from model.dqn_agent import DQNAgent
 
 def train_model():
     # Load configuration
-    with open('/content/DynamicTrafficSim/config.yaml', 'r') as f:
+    with open('config.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
     # Create and check the environment

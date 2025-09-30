@@ -4,3 +4,7 @@ scripts/__pycache__
 sumo_files/out.xml
 routes.rou.xml
 routes/
+data/
+models/
+__pycache__
+detector_output.xml

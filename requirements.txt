@@ -1,6 +1,7 @@
-stable-baselines3[extra]
+stable-baselines3
 gymnasium
-pyyaml
-pandas
+tensorflow
+traci
+PyYAML
 shapely
-traci # Note: Usually comes with SUMO, but can be installed via pip if needed
+numpy<2.0
