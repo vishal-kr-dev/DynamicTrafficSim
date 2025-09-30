@@ -31,12 +31,16 @@ class SumoEnv(gym.Env):
         self.route_folder = config['sumo']['route_folder']
         
         self.phases = {
-            0: "GrGrGrGr", # N-S Green
-            1: "yryryryr", # N-S Yellow
-            2: "rGrGrGrG", # E-W Green
-            3: "ryryryry"  # E-W Yellow
+            0: "GGgrrrrrrrrrrr", # Phase 0 (e.g., North Green)
+            1: "yyyrrrrrrrrrrr", # Phase 1 (e.g., North Yellow)
+            2: "rrrGGgrrrrrrrr", # Phase 2 (e.g., East Green)
+            3: "rrryyyrrrrrrrr", # Phase 3 (e.g., East Yellow)
+            4: "rrrrrrGGgrrrrr", # Phase 4 (e.g., South Green)
+            5: "rrrrrryyyrrrrr", # Phase 5 (e.g., South Yellow)
+            6: "rrrrrrrrrGGgrr", # Phase 6 (e.g., West Green)
+            7: "rrrrrrrrryyyrr"  # Phase 7 (e.g., West Yellow)
         }
-        self.phase_map = {'N_GREEN': 0, 'E_GREEN': 2, 'S_GREEN': 0, 'W_GREEN': 2}
+        self.phase_map = {'N_GREEN': 0, 'E_GREEN': 2, 'S_GREEN': 4, 'W_GREEN': 6}
         
         # Modules
         self.traffic_state = TrafficState()
@@ -59,10 +63,12 @@ class SumoEnv(gym.Env):
         
         start_simulation(self.config, route_file, self.use_gui)
         
+        self.preemption.intersection_poly = self.preemption._get_intersection_polygon()
+
         self.current_step = 0
         self.current_phase = 0
         self.time_in_phase = 0
-        traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.current_phase])
+        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
 
         return self.traffic_state.get_observation(self.current_phase, self.time_in_phase), {}
 
@@ -75,7 +81,7 @@ class SumoEnv(gym.Env):
                 self._set_phase(preemption_phase)
         else:
             # Normal DQN control
-            is_green_phase = self.current_phase in [0, 2]
+            is_green_phase = self.current_phase in [0, 2, 4, 6]
             
             # Action logic: 1=Change, 0=Stay
             if is_green_phase and self.time_in_phase > self.min_green and action == 1:
@@ -105,17 +111,17 @@ class SumoEnv(gym.Env):
     def _set_phase(self, new_phase):
         if self.current_phase != new_phase:
             self.current_phase = new_phase
-            traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.current_phase])
+            traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
             self.time_in_phase = 0
 
     def _transition_to_yellow(self):
         self.current_phase += 1 # Assumes Green phases are even, Yellows are odd
-        traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.current_phase])
+        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
         self.time_in_phase = 0
 
     def _transition_to_green(self):
         self.current_phase = (self.current_phase + 1) % len(self.phases)
-        traci.trafficlight.setRedYellowGreenState("J0", self.phases[self.current_phase])
+        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
         self.time_in_phase = 0
 
     def close(self):

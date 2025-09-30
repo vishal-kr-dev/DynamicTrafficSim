@@ -3,6 +3,7 @@ sumo:
   net_file: "sumo_files/intersection.net.xml"
   config_file: "sumo_files/sumo_config.sumocfg"
   route_folder: "routes"
+  junction_id: "J1"
   simulation_end: 1800  # seconds
   min_green_time: 10
   max_green_time: 40

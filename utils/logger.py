@@ -14,7 +14,7 @@ class TrafficLogger:
 
     def log_step(self, time):
         # Log TLS data
-        phase = traci.trafficlight.getPhase("J0")
+        phase = traci.trafficlight.getPhase("J1")
         self.tls_data.append([time, phase])
 
         # Log vehicle and ambulance data

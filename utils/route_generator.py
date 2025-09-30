@@ -34,7 +34,7 @@ def generate_routes(config, num_routes, prefix):
             "-o", route_file_path,
             "-e", str(simulation_end),
             "-p", str(period),
-            "--random", "true"
+            "--random"
         ], check=True)
         
         # Add an ambulance to a subset of routes

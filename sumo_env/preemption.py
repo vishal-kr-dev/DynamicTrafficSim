@@ -5,10 +5,10 @@ class PreemptionLogic:
     def __init__(self, detection_distance, phases):
         self.detection_distance = detection_distance
         self.phases = phases
-        self.intersection_poly = self._get_intersection_polygon()
+        self.intersection_poly = None
 
     def _get_intersection_polygon(self):
-        shape = traci.junction.getShape("J0")
+        shape = traci.junction.getShape("J1")
         return Polygon(shape)
 
     def check_for_preemption(self):
