@@ -2,3 +2,5 @@ Folder_Structure.md
 Progress.md
 scripts/__pycache__
 sumo_files/out.xml
+routes.rou.xml
+routes/

@@ -14,7 +14,7 @@ routes:
   num_train_routes: 10
   num_test_routes: 5
   ambulance_ratio: 0.3 # 30% of routes will have an ambulance
-  period: 3 # Average time between vehicle departures
+  period: 6 # Average time between vehicle departures
   
 # DQN Agent Hyperparameters
 dqn:

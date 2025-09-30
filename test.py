@@ -8,7 +8,7 @@ def test_model():
         config = yaml.safe_load(f)
 
     # Create the environment with GUI for visualization
-    env = SumoEnv(config, use_gui=True)
+    env = SumoEnv(config, use_gui=True, is_test=True)
 
     # Create the agent and load the trained model
     agent = DQNAgent(env, config)

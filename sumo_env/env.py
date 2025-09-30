@@ -12,93 +12,92 @@ from .preemption import PreemptionLogic
 from utils.logger import TrafficLogger
 
 class SumoEnv(gym.Env):
-    def __init__(self, config, use_gui=False):
+    def __init__(self, config, use_gui=False, is_test=False):
         super(SumoEnv, self).__init__()
+        # ... (the rest of your __init__ method is the same as before) ...
         self.config = config
         self.use_gui = use_gui
-        self.is_test = not use_gui # A simple flag to differentiate train/test runs
-
-        # State and Action Space
-        # Observation: 8 lanes (counts), 8 lanes (wait times), 1 (current phase), 1 (time in phase) = 18
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(18,), dtype=np.float32)
-        self.action_space = spaces.Discrete(2) # 0: Keep phase, 1: Change phase
+        self.is_test = is_test # A simple flag to differentiate train/test runs
 
         # SUMO simulation parameters
+        self.junction_id = config['sumo']['junction_id']
         self.sim_end = config['sumo']['simulation_end']
         self.min_green = config['sumo']['min_green_time']
         self.max_green = config['sumo']['max_green_time']
         self.yellow_time = config['sumo']['yellow_time']
         self.route_folder = config['sumo']['route_folder']
         
+        # Define phases BEFORE they are used by other modules
         self.phases = {
-            0: "GGgrrrrrrrrrrr", # Phase 0 (e.g., North Green)
-            1: "yyyrrrrrrrrrrr", # Phase 1 (e.g., North Yellow)
-            2: "rrrGGgrrrrrrrr", # Phase 2 (e.g., East Green)
-            3: "rrryyyrrrrrrrr", # Phase 3 (e.g., East Yellow)
-            4: "rrrrrrGGgrrrrr", # Phase 4 (e.g., South Green)
-            5: "rrrrrryyyrrrrr", # Phase 5 (e.g., South Yellow)
-            6: "rrrrrrrrrGGgrr", # Phase 6 (e.g., West Green)
-            7: "rrrrrrrrryyyrr"  # Phase 7 (e.g., West Yellow)
+            0: "GGgrrrrrrrrrrr", 1: "yyyrrrrrrrrrrr", 2: "rrrGGgrrrrrrrr", 
+            3: "rrryyyrrrrrrrr", 4: "rrrrrrGGgrrrrr", 5: "rrrrrryyyrrrrr",
+            6: "rrrrrrrrrGGgrr", 7: "rrrrrrrrryyyrr"
         }
         self.phase_map = {'N_GREEN': 0, 'E_GREEN': 2, 'S_GREEN': 4, 'W_GREEN': 6}
-        
+
         # Modules
         self.traffic_state = TrafficState()
         self.reward_calc = RewardCalculator(self.traffic_state.lanes)
         self.preemption = PreemptionLogic(config['preemption']['detection_distance'], self.phase_map)
         self.logger = TrafficLogger(config['paths']['log_folder']) if self.is_test else None
 
+        # State and Action Space (Calculated Dynamically)
+        num_lanes = len(self.traffic_state.lanes)
+        obs_space_size = (num_lanes * 2) + 2
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(obs_space_size,), dtype=np.float32)
+        self.action_space = spaces.Discrete(2)
+
         self.current_step = 0
         self.current_phase = 0
         self.time_in_phase = 0
 
+
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        
         close_simulation()
         
         prefix = 'test' if self.is_test else 'train'
         num_routes = self.config['routes']['num_test_routes'] if self.is_test else self.config['routes']['num_train_routes']
         route_file = os.path.join(self.route_folder, f"{prefix}_{random.randint(0, num_routes - 1)}.rou.xml")
         
-        start_simulation(self.config, route_file, self.use_gui)
+        # --- NEW DEBUG PRINT ---
+        print(f"\n[DEBUG] Loading new episode with route file: {os.path.basename(route_file)}")
         
-        self.preemption.intersection_poly = self.preemption._get_intersection_polygon()
+        start_simulation(self.config, route_file, self.use_gui)
+        self.preemption.intersection_poly = self.preemption._get_intersection_polygon(self.junction_id)
 
         self.current_step = 0
         self.current_phase = 0
         self.time_in_phase = 0
-        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
+        traci.trafficlight.setRedYellowGreenState(self.junction_id, self.phases[self.current_phase])
 
         return self.traffic_state.get_observation(self.current_phase, self.time_in_phase), {}
 
     def step(self, action):
+        # --- NEW DEBUG PRINT ---
+        if self.current_step % 100 == 0: # Print every 100 steps to avoid spam
+             print(f"[DEBUG] Step: {self.current_step}, Action: {action}")
+        
+        # ... (the rest of your step method is the same as before) ...
         preemption_phase = self.preemption.check_for_preemption()
 
         if preemption_phase is not None:
-            # Emergency vehicle detected, override agent's action
             if self.current_phase != preemption_phase:
                 self._set_phase(preemption_phase)
         else:
-            # Normal DQN control
             is_green_phase = self.current_phase in [0, 2, 4, 6]
-            
-            # Action logic: 1=Change, 0=Stay
             if is_green_phase and self.time_in_phase > self.min_green and action == 1:
                 self._transition_to_yellow()
             elif is_green_phase and self.time_in_phase > self.max_green:
                 self._transition_to_yellow()
         
-        # Advance simulation
         traci.simulationStep()
         self.current_step += 1
         self.time_in_phase += 1
 
-        # Handle yellow phase transitions
-        if self.current_phase in [1, 3] and self.time_in_phase >= self.yellow_time:
+        if self.current_phase in [1, 3, 5, 7] and self.time_in_phase >= self.yellow_time:
             self._transition_to_green()
             
-        # Get results
         observation = self.traffic_state.get_observation(self.current_phase, self.time_in_phase)
         reward = self.reward_calc.calculate_reward()
         terminated = self.current_step >= self.sim_end
@@ -108,20 +107,21 @@ class SumoEnv(gym.Env):
 
         return observation, reward, terminated, False, {}
 
+    # ... (the rest of your file is the same) ...
     def _set_phase(self, new_phase):
         if self.current_phase != new_phase:
             self.current_phase = new_phase
-            traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
+            traci.trafficlight.setRedYellowGreenState(self.junction_id, self.phases[self.current_phase])
             self.time_in_phase = 0
 
     def _transition_to_yellow(self):
-        self.current_phase += 1 # Assumes Green phases are even, Yellows are odd
-        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
+        self.current_phase += 1
+        traci.trafficlight.setRedYellowGreenState(self.junction_id, self.phases[self.current_phase])
         self.time_in_phase = 0
 
     def _transition_to_green(self):
         self.current_phase = (self.current_phase + 1) % len(self.phases)
-        traci.trafficlight.setRedYellowGreenState("J1", self.phases[self.current_phase])
+        traci.trafficlight.setRedYellowGreenState(self.junction_id, self.phases[self.current_phase])
         self.time_in_phase = 0
 
     def close(self):

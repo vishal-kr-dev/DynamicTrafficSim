@@ -5,11 +5,11 @@ from model.dqn_agent import DQNAgent
 
 def train_model():
     # Load configuration
-    with open('config.yaml', 'r') as f:
+    with open('/content/DynamicTrafficSim/config.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
     # Create and check the environment
-    env = SumoEnv(config, use_gui=False)
+    env = SumoEnv(config, use_gui=False, is_test=False)
     check_env(env)
 
     # Create and train the agent
