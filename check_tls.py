@@ -31,8 +31,8 @@ for i, link in enumerate(links):
         outgoing = link[0][1]
         print(f"Index {i}: {incoming} -> {outgoing}")
 
-# Get current program
-logic = traci.trafficlight.getAllProgramLogics(tls_id)[0]
+# Get current program logic
+tl_id, logic = traci.trafficlight.getCompleteRedYellowGreenDefinition(tls_id)
 print(f"\nNumber of phases: {len(logic.phases)}")
 
 for i, phase in enumerate(logic.phases):

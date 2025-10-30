@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration><input><net-file value="intersection.net.xml" /><route-files value="traffic.rou.xml" /><additional-files value="tls_program.add.xml" /></input><time><begin value="0" /><end value="3600" /></time></configuration>
